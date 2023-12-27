@@ -55,5 +55,5 @@ func TestToReader(t *testing.T) {
 	bytes, err := io.ReadAll(smtpMessage.ToReader())
 	(*gounit.T)(t).AssertNotError(err)
 
-	(*gounit.T)(t).AssertLengthString(730, string(bytes))
+	(*gounit.T)(t).AssertLengthString(755, string(bytes))
 }

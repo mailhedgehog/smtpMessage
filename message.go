@@ -64,11 +64,15 @@ func (message *SmtpMessage) ToReader() io.Reader {
 	var bufferReader = new(bytes.Buffer)
 
 	if message != nil {
-		bufferReader.WriteString("ID:" + message.Helo + "\r\n")
+		bufferReader.WriteString("ID:" + string(message.ID) + "\r\n")
 		bufferReader.WriteString("HELO:" + message.Helo + "\r\n")
-		bufferReader.WriteString("FROM:" + message.From.ToString() + "\r\n")
+		if message.From != nil {
+			bufferReader.WriteString("FROM:" + message.From.ToString() + "\r\n")
+		}
 		for _, to := range message.To {
-			bufferReader.WriteString("TO:" + to.ToString() + "\r\n")
+			if to != nil {
+				bufferReader.WriteString("TO:" + to.ToString() + "\r\n")
+			}
 		}
 		bufferReader.WriteString("\r\n")
 		bufferReader.WriteString(message.origin)
