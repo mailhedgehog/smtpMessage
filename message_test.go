@@ -57,3 +57,29 @@ func TestToReader(t *testing.T) {
 
 	(*gounit.T)(t).AssertLengthString(755, string(bytes))
 }
+
+func TestSetOrigin(t *testing.T) {
+	msg := &SmtpMessage{}
+	msg.SetOrigin("")
+
+	(*gounit.T)(t).AssertNil(msg.From)
+	(*gounit.T)(t).AssertEqualsInt(0, len(msg.To))
+
+	msg.SetOrigin(`From: Rares <quix@quib.com>
+Date: Thu, 2 May 2019 11:25:35 +0300
+Subject: Re: kern/54143 (virtualbox)
+To: foo@quib.com
+Content-Type: multipart/mixed; boundary="0000000000007e2bb40587e36196"
+
+--0000000000007e2bb40587e36196
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr"><div>html text part</div><div><br></div><div><br><br></div></div>
+
+--0000000000007e2bb40587e36196--
+`)
+
+	(*gounit.T)(t).AssertEqualsString("quix@quib.com", msg.From.Address())
+	(*gounit.T)(t).AssertEqualsInt(1, len(msg.To))
+	(*gounit.T)(t).AssertEqualsString("foo@quib.com", msg.To[0].Address())
+}
