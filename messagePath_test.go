@@ -22,6 +22,13 @@ func TestPath_FromString(t *testing.T) {
 	(*gounit.T)(t).AssertEqualsString("baz", from.Mailbox)
 	(*gounit.T)(t).AssertEqualsString("foo.com", from.Domain)
 
+	from2, err := MessagePathFromString("<foo-10@quib.com>")
+	(*gounit.T)(t).AssertNotError(err)
+	(*gounit.T)(t).AssertTrue(len(from2.Relays) == 0)
+	(*gounit.T)(t).AssertEqualsString("foo-10", from2.Mailbox)
+	(*gounit.T)(t).AssertEqualsString("quib.com", from2.Domain)
+	(*gounit.T)(t).AssertEqualsString("foo-10@quib.com", from2.Address())
+
 	to, err := MessagePathFromString("<@foo,@bar,@baz:quix@quib.com> <foo,bar>")
 	(*gounit.T)(t).AssertNotError(err)
 	(*gounit.T)(t).AssertTrue(len(to.Relays) == 3)

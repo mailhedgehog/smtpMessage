@@ -95,7 +95,7 @@ func FromString(messageString string, messageId MessageID) *SmtpMessage {
 			if strings.HasPrefix(l, "ID:") {
 				if msg.ID == "" {
 					l = strings.TrimPrefix(l, "ID:")
-					l = strings.Trim(l, " \r")
+					l = strings.Trim(l, " \n\r")
 					msg.ID = MessageID(l)
 				}
 				continue
@@ -103,14 +103,14 @@ func FromString(messageString string, messageId MessageID) *SmtpMessage {
 
 			if strings.HasPrefix(l, "HELO:") {
 				l = strings.TrimPrefix(l, "HELO:")
-				l = strings.Trim(l, " \r")
+				l = strings.Trim(l, " \n\r")
 				msg.Helo = l
 				continue
 			}
 
 			if strings.HasPrefix(l, "FROM:") {
 				l = strings.TrimPrefix(l, "FROM:")
-				l = strings.TrimSuffix(l, " \r")
+				l = strings.Trim(l, " \n\r")
 				messagePath, _ = MessagePathFromString(l)
 				if messagePath != nil {
 					msg.From = messagePath
@@ -120,7 +120,7 @@ func FromString(messageString string, messageId MessageID) *SmtpMessage {
 
 			if strings.HasPrefix(l, "TO:") {
 				l = strings.TrimPrefix(l, "TO:")
-				l = strings.TrimSuffix(l, " \r")
+				l = strings.Trim(l, " \n\r")
 				messagePath, _ := MessagePathFromString(l)
 				if messagePath != nil {
 					msg.To = append(msg.To, messagePath)
